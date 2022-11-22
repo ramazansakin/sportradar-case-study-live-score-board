@@ -43,7 +43,7 @@ class FCScoreBoardTest {
 
     @Test
     void shouldScoreBoardStartStreaming() {
-        ScoreBoard scoreBoard = new ScoreBoard();
+        ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
         scoreBoard.startStreaming();
         assertEquals("Live Score Board Up and Running\r\n", outContent.toString());
     }
