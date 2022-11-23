@@ -70,6 +70,10 @@ public class ScoreBoard {
             System.err.println("Need to get 2 teams to start a match!");
             return;
         }
+        if (commandLineParts[1].equals(commandLineParts[2])) {
+            System.err.println("Need to get different teams to start a match!");
+            return;
+        }
 
         Team home = new Team(commandLineParts[1]);
         Team away = new Team(commandLineParts[2]);
