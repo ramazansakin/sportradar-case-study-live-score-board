@@ -117,4 +117,12 @@ class FCScoreBoardTest {
         assertEquals("Need to get 2 teams to start a match!\r\n", errContent.toString());
     }
 
+    // As an edge case, we need to check start command to get at least 2 different team names
+    @Test
+    void shouldNotStartMatchOnBoardWithSameTeamNames() {
+        provideInput("start Turkey Turkey\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("Need to get different teams to start a match!\r\n", errContent.toString());
+    }
+
 }
