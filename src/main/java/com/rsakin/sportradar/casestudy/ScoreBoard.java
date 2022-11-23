@@ -12,6 +12,8 @@ public class ScoreBoard {
     // ScoreBoard needs to be singleton
     private static ScoreBoard scoreBoard = null;
     private static Set<Match> matches;
+    // hold match number to know match orders for summary of the score board
+    private static int MATCH_ORDER = 1;
 
     // we can limit the names regarding the country names that is involved to the World Cup for the current season
     public static final List<String> VALID_TEAM_NAMES_FOR_CURRENT_SEASON = Arrays.asList(
@@ -55,6 +57,8 @@ public class ScoreBoard {
                 updateScores(commandLineParts);
             } else if (commandLineParts[0].equals("finish")) {
                 finishMatch(commandLineParts);
+            } else if (commandLineParts[0].equals("summary")) {
+                getFullSummary();
             }
             commandLine = in.nextLine();
         }
@@ -97,7 +101,7 @@ public class ScoreBoard {
         }
 
         // increase match order every new match addition on board to follow the order
-        Match newMatch = new Match(home, away);
+        Match newMatch = new Match(home, away, MATCH_ORDER++);
         matches.add(newMatch);
         System.out.println("Match started [ " + newMatch + " ]");
     }
@@ -120,6 +124,10 @@ public class ScoreBoard {
         } catch (RuntimeException exception) {
             System.err.println("This match is not being played at the moment!");
         }
+    }
+
+    private void getFullSummary() {
+        matches.stream().sorted().forEach(System.out::println);
     }
 
     private Optional<Match> findMatch(final Team team) {

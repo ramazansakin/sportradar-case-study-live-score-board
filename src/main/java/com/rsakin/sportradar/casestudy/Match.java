@@ -1,17 +1,20 @@
 package com.rsakin.sportradar.casestudy;
 
-public class Match {
+import java.util.Objects;
 
-    // we need to be sure the teams defined at the first time and never changed
+public class Match implements Comparable<Match> {
+
     private final Team home;
     private final Team away;
+    private final int matchOrder;
     // When a game starts, it should capture (being initial score 0-0)
     private int homeTeamScore = 0;
     private int awayTeamScore = 0;
 
-    public Match(Team home, Team away) {
+    public Match(Team home, Team away, int matchOrder) {
         this.home = home;
         this.away = away;
+        this.matchOrder = matchOrder;
     }
 
     public Team getHome() {
@@ -38,10 +41,38 @@ public class Match {
         this.awayTeamScore = awayTeamScore;
     }
 
+    public int getMatchOrder() {
+        return matchOrder;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Match)) return false;
+        Match match = (Match) o;
+        return home.equals(match.home) && away.equals(match.away);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(home, away);
+    }
+
     @Override
     public String toString() {
         return home.getName() + " " + homeTeamScore + " - " + away.getName() + " " + awayTeamScore;
     }
 
-
+    @Override
+    public int compareTo(Match other) {
+        if (this.homeTeamScore + this.awayTeamScore == other.getHomeTeamScore() + other.getAwayTeamScore()) {
+            if (this.matchOrder > other.getMatchOrder()) {
+                return -1;
+            }
+            return 1;
+        } else if (this.homeTeamScore + this.awayTeamScore > other.getHomeTeamScore() + other.getAwayTeamScore()) {
+            return -1;
+        }
+        return 1;
+    }
 }
