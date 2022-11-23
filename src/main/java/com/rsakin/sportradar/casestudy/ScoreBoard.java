@@ -11,7 +11,7 @@ public class ScoreBoard {
 
     // ScoreBoard needs to be singleton
     private static ScoreBoard scoreBoard = null;
-    private Set<Match> matches;
+    private static Set<Match> matches;
 
     // we can limit the names regarding the country names that is involved to the World Cup for the current season
     public static final List<String> VALID_TEAM_NAMES_FOR_CURRENT_SEASON = Arrays.asList(
@@ -24,12 +24,21 @@ public class ScoreBoard {
         matches = new HashSet<>();
     }
 
+    public static Set<Match> getMatches() {
+        return matches;
+    }
+
     public static ScoreBoard getScoreBoard() {
         // Lazy Loading
         if (scoreBoard == null) {
             scoreBoard = new ScoreBoard();
         }
         return scoreBoard;
+    }
+
+    // For clear sequential test cases, we need to clear the board
+    public static void clearBoard() {
+        getMatches().clear();
     }
 
     public void startStreaming() {

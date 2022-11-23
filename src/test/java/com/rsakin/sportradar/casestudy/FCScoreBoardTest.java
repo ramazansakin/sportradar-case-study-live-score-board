@@ -33,6 +33,7 @@ class FCScoreBoardTest {
 
     @AfterEach
     public void restoreStreams() {
+        ScoreBoard.clearBoard();
         System.setOut(originalOut);
         System.setErr(originalErr);
         System.setIn(systemIn);
