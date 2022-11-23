@@ -65,6 +65,12 @@ public class ScoreBoard {
 
     // Start a new match and add it to score board
     private void startNewMatch(final String[] commandLineParts) {
+
+        if (commandLineParts.length < 3) {
+            System.err.println("Need to get 2 teams to start a match!");
+            return;
+        }
+
         Team home = new Team(commandLineParts[1]);
         Team away = new Team(commandLineParts[2]);
         // validate the team names
