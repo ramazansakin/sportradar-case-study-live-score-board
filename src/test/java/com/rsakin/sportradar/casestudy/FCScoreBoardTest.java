@@ -48,4 +48,13 @@ class FCScoreBoardTest {
         assertEquals("Live Score Board Up and Running\r\n", outContent.toString());
     }
 
+    // We can start new match and add to live score board
+    @Test
+    void shouldAcceptStartCommandToAddNewMatchToBoard() {
+        ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
+        scoreBoard.startStreaming();
+        provideInput("start Mexico Uruguay");
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\"", outContent.toString());
+    }
+
 }
