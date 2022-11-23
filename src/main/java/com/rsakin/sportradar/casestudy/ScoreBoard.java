@@ -3,6 +3,7 @@ package com.rsakin.sportradar.casestudy;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -55,7 +56,7 @@ public class ScoreBoard {
         // but we need to be sure there is a match playing for the team
         Team home = new Team(commandLineParts[1]);
         try {
-            Match theMatchWithTeam = getTheMatchByHomeTeam(home);
+            Match theMatchWithTeam = getMatch(home);
             matches.remove(theMatchWithTeam);
             System.out.println("Match finished [ " + theMatchWithTeam + " ]");
         } catch (RuntimeException exception) {
@@ -74,11 +75,15 @@ public class ScoreBoard {
             System.err.println("Need to get different teams to start a match!");
             return;
         }
+        // validate the team names
+        if (!validateTeamName(commandLineParts[1]) || !validateTeamName(commandLineParts[2])) {
+            return;
+        }
 
         Team home = new Team(commandLineParts[1]);
         Team away = new Team(commandLineParts[2]);
-        // validate the team names
-        if (!validateTeamName(commandLineParts[1]) || !validateTeamName(commandLineParts[2])) {
+        if (findMatch(home).isPresent() || findMatch(away).isPresent()) {
+            System.err.println("Can not start again a match with a team that has a match which is being played currently!");
             return;
         }
 
@@ -99,7 +104,7 @@ public class ScoreBoard {
         }
 
         try {
-            Match theMatchWithTeam = getTheMatchByHomeTeam(home);
+            Match theMatchWithTeam = getMatch(home);
             theMatchWithTeam.setHomeTeamScore(homeTeamScore);
             theMatchWithTeam.setAwayTeamScore(awayTeamScore);
             System.out.println("Score updated [ " + theMatchWithTeam + " ]");
@@ -108,7 +113,13 @@ public class ScoreBoard {
         }
     }
 
-    private Match getTheMatchByHomeTeam(final Team home) {
+    private Optional<Match> findMatch(final Team team) {
+        return matches.stream()
+                .filter(match -> match.getHome().equals(team) || match.getAway().equals(team))
+                .findFirst();
+    }
+
+    private Match getMatch(final Team home) {
         return matches.stream()
                 .filter(match -> match.getHome().equals(home) || match.getAway().equals(home))
                 .findFirst()
