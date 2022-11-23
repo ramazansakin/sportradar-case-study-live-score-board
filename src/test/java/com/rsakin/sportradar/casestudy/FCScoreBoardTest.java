@@ -71,8 +71,8 @@ class FCScoreBoardTest {
         ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
         provideInput("start Mexico Uruguay\nupdate Poland 1 Uruguay 0\nexit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n" +
-                "This match is not being played at the moment!\r\n", errContent.toString());
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n", outContent.toString());
+        assertEquals("This match is not being played at the moment!\r\n", errContent.toString());
     }
 
 }
