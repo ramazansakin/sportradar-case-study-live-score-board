@@ -75,7 +75,7 @@ class FCScoreBoardTest {
         assertEquals("This match is not being played at the moment!\r\n", errContent.toString());
     }
 
-    // As an another edge case, if we are trying to update a match with negative numbers
+    // As edge case, if we are trying to update a match with negative numbers
     @Test
     void shouldNotUpdateMatchScoresOnBoardWithNegativeNumbers() {
         ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
@@ -83,6 +83,15 @@ class FCScoreBoardTest {
         scoreBoard.startStreaming();
         assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
         assertEquals("Scores can not be negative!\r\n", errContent.toString());
+    }
+
+    // edge case, if we are trying to update a match with negative numbers
+    @Test
+    void shouldNotStartMatchOnBoardWithNotValidTeamNames() {
+        ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
+        provideInput("start Turkey XYZ\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("Not valid team name [ XYZ ]\r\n", errContent.toString());
     }
 
 }
