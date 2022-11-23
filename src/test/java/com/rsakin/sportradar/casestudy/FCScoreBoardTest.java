@@ -109,4 +109,12 @@ class FCScoreBoardTest {
         assertEquals("This match is not being played at the moment!\r\n", errContent.toString());
     }
 
+    // As an edge case, we need to check start command to get at least 2 team names
+    @Test
+    void shouldNotStartMatchOnBoardWithInsufficientTeamParameter() {
+        provideInput("start Turkey\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("Need to get 2 teams to start a match!\r\n", errContent.toString());
+    }
+
 }
