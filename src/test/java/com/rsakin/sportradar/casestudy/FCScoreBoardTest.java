@@ -95,4 +95,14 @@ class FCScoreBoardTest {
         assertEquals("Not valid team name [ XYZ ]\r\n", errContent.toString());
     }
 
+    // we could finish a match and remove on the board
+    @Test
+    void shouldFinishMatchOnBoard() {
+        ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
+        provideInput("start Turkey Germany\nupdate Turkey 0 Germany -1\nfinish Turkey\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n" +
+                "Match finished [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
+    }
+
 }
