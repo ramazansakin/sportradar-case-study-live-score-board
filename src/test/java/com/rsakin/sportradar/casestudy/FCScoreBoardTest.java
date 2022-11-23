@@ -125,4 +125,14 @@ class FCScoreBoardTest {
         assertEquals("Need to get different teams to start a match!\r\n", errContent.toString());
     }
 
+    // we can not start again a match with a team that has a match which is being played currently
+    @Test
+    void shouldNotStartMatchOnBoardWithTeamThatIsAlreadyStarted() {
+        provideInput("start Turkey Germany\nstart Turkey Uruguay\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
+        assertEquals("Can not start again a match with a team that has a match which is being played currently!\r\n", errContent.toString());
+    }
+
+
 }
