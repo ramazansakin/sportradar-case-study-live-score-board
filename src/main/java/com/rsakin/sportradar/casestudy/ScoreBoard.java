@@ -43,8 +43,23 @@ public class ScoreBoard {
                 startNewMatch(commandLineParts);
             } else if (commandLineParts[0].equals("update")) {
                 updateScores(commandLineParts);
+            } else if (commandLineParts[0].equals("finish")) {
+                finishMatch(commandLineParts);
             }
             commandLine = in.nextLine();
+        }
+    }
+
+    private void finishMatch(final String[] commandLineParts) {
+        // Just need to get the home team name to finish and remove the match from scoreboard
+        // but we need to be sure there is a match playing for the team
+        Team home = new Team(commandLineParts[1]);
+        try {
+            Match theMatchWithTeam = getTheMatchByHomeTeam(home);
+            matches.remove(theMatchWithTeam);
+            System.out.println("Match finished [ " + theMatchWithTeam + " ]");
+        } catch (RuntimeException exception) {
+            System.err.println("This match is not being played at the moment!");
         }
     }
 
