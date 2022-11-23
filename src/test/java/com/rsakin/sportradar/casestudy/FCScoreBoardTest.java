@@ -105,4 +105,13 @@ class FCScoreBoardTest {
                 "Match finished [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
     }
 
+    // As a similar edge case we need to see error message when we try to finish a match that has been not started yet
+    @Test
+    void shouldNotFinishMatchOnBoardWithNotStarted() {
+        ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
+        provideInput("finish Turkey\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("This match is not being played at the moment!\r\n", errContent.toString());
+    }
+
 }
