@@ -1,6 +1,8 @@
 package com.rsakin.sportradar.casestudy;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -9,6 +11,13 @@ public class ScoreBoard {
     // ScoreBoard needs to be singleton
     private static ScoreBoard scoreBoard = null;
     private Set<Match> matches;
+
+    // we can limit the names regarding the country names that is involved to the World Cup for the current season
+    public static final List<String> VALID_TEAM_NAMES_FOR_CURRENT_SEASON = Arrays.asList(
+            "Qatar", "Brazil", "Belgium", "France", "Argentina", "England", "Spain", "Portugal", "Mexico", "Netherlands",
+            "Denmark", "Germany", "Uruguay", "Switzerland", "United States", "Croatia", "Senegal", "Iran", "Japan",
+            "Morocco", "Serbia", "Poland", "South Korea", "Tunisia", "Cameroon", "Canada", "Turkey", "Italy", "Australia"
+    );
 
     private ScoreBoard() {
         matches = new HashSet<>();
@@ -43,6 +52,11 @@ public class ScoreBoard {
     private void startNewMatch(final String[] commandLineParts) {
         Team home = new Team(commandLineParts[1]);
         Team away = new Team(commandLineParts[2]);
+        // validate the team names
+        if (!validateTeamName(commandLineParts[1]) || !validateTeamName(commandLineParts[2])) {
+            return;
+        }
+
         // increase match order every new match addition on board to follow the order
         Match newMatch = new Match(home, away);
         matches.add(newMatch);
@@ -50,7 +64,6 @@ public class ScoreBoard {
     }
 
     private void updateScores(final String[] commandLineParts) {
-        // TODO - need to check PARSE error !
         Team home = new Team(commandLineParts[1]);
         int homeTeamScore = Integer.parseInt(commandLineParts[2]);
         int awayTeamScore = Integer.parseInt(commandLineParts[4]);
@@ -75,6 +88,16 @@ public class ScoreBoard {
                 .filter(match -> match.getHome().equals(home) || match.getAway().equals(home))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No match found"));
+    }
+
+    // Also we can use a @ValidTeamName annotation to handle all the business inside that
+    // but it needs requiring another libraries, so I just want to leave it simple for now
+    private boolean validateTeamName(final String teamName) {
+        if (!VALID_TEAM_NAMES_FOR_CURRENT_SEASON.contains(teamName)) {
+            System.err.println("Not valid team name [ " + teamName + " ]");
+            return false;
+        }
+        return true;
     }
 
 }
