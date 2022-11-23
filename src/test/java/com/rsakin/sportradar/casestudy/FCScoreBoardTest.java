@@ -135,5 +135,16 @@ class FCScoreBoardTest {
         assertEquals("Can not start again a match with a team that has a match which is being played currently!\r\n", errContent.toString());
     }
 
+    // we can not start again a match with a team that has a match which is being played currently
+    @Test
+    void shouldSeeSummaryOfTheMatchesOrderlyOnBoard() {
+        provideInput("start Turkey Uruguay\nstart Poland Mexico\nupdate Poland 1 Mexico 0\nupdate Turkey 1 Uruguay 0\n" +
+                "update Turkey 2 Uruguay 0\nsummary\nexit");
+        scoreBoard.startStreaming();
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Uruguay 0 ]\r\nMatch started [ Poland 0 - Mexico 0 ]\r\n" +
+                "Score updated [ Poland 1 - Mexico 0 ]\r\nScore updated [ Turkey 1 - Uruguay 0 ]\r\nScore updated [ Turkey 2 - Uruguay 0 ]\r\n" +
+                "Turkey 2 - Uruguay 0\r\n" +
+                "Poland 1 - Mexico 0\r\n", outContent.toString());
+    }
 
 }
