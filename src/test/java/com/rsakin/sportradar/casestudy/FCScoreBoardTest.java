@@ -57,4 +57,12 @@ class FCScoreBoardTest {
         assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n", outContent.toString());
     }
 
+    @Test
+    void shouldUpdateScoresOnBoard() {
+        ScoreBoard scoreBoard = ScoreBoard.getScoreBoard();
+        provideInput("start Mexico Uruguay\nupdate Mexico 1 Uruguay 0");
+        scoreBoard.startStreaming();
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\nScore updated [ Mexico 1 - Uruguay 0 ]", outContent.toString());
+    }
+
 }
