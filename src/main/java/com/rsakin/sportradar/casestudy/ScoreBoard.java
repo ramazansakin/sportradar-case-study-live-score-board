@@ -3,6 +3,7 @@ package com.rsakin.sportradar.casestudy;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Set;
@@ -47,30 +48,40 @@ public class ScoreBoard {
         System.out.println("Live Score Board Up and Running");
         // Using Scanner for Getting Input from User
         Scanner in = new Scanner(System.in);
-        String command = in.nextLine();
-
-        while (!"exit".equals(command)) {
-            doCommand(command);
+        String command;
+        do {
             command = in.nextLine();
-        }
-        System.out.println("Application exit! Thanks for watching our board!");
+        } while (doCommand(command));
+
     }
 
-    private void doCommand(final String commandLine) {
+    private boolean doCommand(final String commandLine) {
         // parse the commandLine
-        // we can also cover every function as command object to implement Command Design Pattern
-        // Or we can also create a Command functionalInterface and then implements sub classes for each command objects
-        // to use functionalities interchangeably depends on the commandLine parameter - Strategy Design Pattern
+        // we can also cover every function as command object to implement 'Command Design Pattern'
+        // and we can also create a Command functionalInterface and then implements sub classes for each command objects
+        // to use functionalities interchangeably depends on the commandLine parameter - 'Strategy Design Pattern'
         // but the new switch operation also maps the command with related implementation
         String[] commandLineParts = commandLine.split(" ");
-        switch (commandLineParts[0]) {
-            case "start" -> startNewMatch(commandLineParts);
-            case "finish" -> finishMatch(commandLineParts);
-            case "update" -> updateScores(commandLineParts);
-            case "summary" -> getFullSummary();
-            default -> System.err.println("There is no such command [ " + commandLineParts[0] + " ]");
+        try {
+            CommandType commandType = CommandType.valueOf(commandLineParts[0].toUpperCase(Locale.ROOT));
+            switch (commandType) {
+                case START -> startNewMatch(commandLineParts);
+                case FINISH -> finishMatch(commandLineParts);
+                case UPDATE -> updateScores(commandLineParts);
+                case SUMMARY -> getFullSummary();
+                case EXIT -> {
+                    return exitApp();
+                }
+            }
+        } catch (IllegalArgumentException exp) {
+            System.err.println("There is no such command [ " + commandLineParts[0] + " ]");
         }
+        return true;
+    }
 
+    private boolean exitApp() {
+        System.out.println("Application exit! Thanks for watching our board!");
+        return false;
     }
 
     private void finishMatch(final String[] commandLineParts) {
@@ -116,20 +127,26 @@ public class ScoreBoard {
     }
 
     private void updateScores(final String[] commandLineParts) {
-        Team home = new Team(commandLineParts[1]);
-        int homeTeamScore = Integer.parseInt(commandLineParts[2]);
-        int awayTeamScore = Integer.parseInt(commandLineParts[4]);
-
-        if (homeTeamScore < 0 || awayTeamScore < 0) {
-            System.err.println("Scores can not be negative!");
+        if (commandLineParts.length < 5) {
+            System.err.println("Need to get team names and scores as parameters at least! Usage : update teamA 1 teamB 0");
             return;
         }
-
         try {
+            int homeTeamScore = Integer.parseInt(commandLineParts[2]);
+            int awayTeamScore = Integer.parseInt(commandLineParts[4]);
+
+            if (homeTeamScore < 0 || awayTeamScore < 0) {
+                System.err.println("Scores can not be negative!");
+                return;
+            }
+
+            Team home = new Team(commandLineParts[1]);
             Match theMatchWithTeam = getMatch(home);
             theMatchWithTeam.setHomeTeamScore(homeTeamScore);
             theMatchWithTeam.setAwayTeamScore(awayTeamScore);
             System.out.println("Score updated [ " + theMatchWithTeam + " ]");
+        } catch (NumberFormatException exception) {
+            System.err.println("Need to send score parameters as number!");
         } catch (RuntimeException exception) {
             System.err.println("This match is not being played at the moment!");
         }
