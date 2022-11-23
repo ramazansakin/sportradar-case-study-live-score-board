@@ -47,21 +47,30 @@ public class ScoreBoard {
         System.out.println("Live Score Board Up and Running");
         // Using Scanner for Getting Input from User
         Scanner in = new Scanner(System.in);
-        String commandLine = in.nextLine();
-        // we need to make a loop to get sequential commands and need to define an exit command
-        while (!commandLine.equals("exit")) {
-            String[] commandLineParts = commandLine.split(" ");
-            if (commandLineParts[0].equals("start")) {
-                startNewMatch(commandLineParts);
-            } else if (commandLineParts[0].equals("update")) {
-                updateScores(commandLineParts);
-            } else if (commandLineParts[0].equals("finish")) {
-                finishMatch(commandLineParts);
-            } else if (commandLineParts[0].equals("summary")) {
-                getFullSummary();
-            }
-            commandLine = in.nextLine();
+        String command = in.nextLine();
+
+        while (!"exit".equals(command)) {
+            doCommand(command);
+            command = in.nextLine();
         }
+        System.out.println("Application exit! Thanks for watching our board!");
+    }
+
+    private void doCommand(final String commandLine) {
+        // parse the commandLine
+        // we can also cover every function as command object to implement Command Design Pattern
+        // Or we can also create a Command functionalInterface and then implements sub classes for each command objects
+        // to use functionalities interchangeably depends on the commandLine parameter - Strategy Design Pattern
+        // but the new switch operation also maps the command with related implementation
+        String[] commandLineParts = commandLine.split(" ");
+        switch (commandLineParts[0]) {
+            case "start" -> startNewMatch(commandLineParts);
+            case "finish" -> finishMatch(commandLineParts);
+            case "update" -> updateScores(commandLineParts);
+            case "summary" -> getFullSummary();
+            default -> System.err.println("There is no such command [ " + commandLineParts[0] + " ]");
+        }
+
     }
 
     private void finishMatch(final String[] commandLineParts) {

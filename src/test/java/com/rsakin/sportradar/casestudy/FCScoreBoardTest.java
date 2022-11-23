@@ -49,7 +49,8 @@ class FCScoreBoardTest {
     void shouldScoreBoardStartStreaming() {
         provideInput("exit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\n", outContent.toString());
+        assertEquals("Live Score Board Up and Running\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
     }
 
     // We can start new match and add to live score board
@@ -57,14 +58,16 @@ class FCScoreBoardTest {
     void shouldAcceptStartCommandToAddNewMatchToBoard() {
         provideInput("start Mexico Uruguay\nexit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n", outContent.toString());
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
     }
 
     @Test
     void shouldUpdateMatchScoresOnBoard() {
         provideInput("start Mexico Uruguay\nupdate Mexico 1 Uruguay 0\nexit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\nScore updated [ Mexico 1 - Uruguay 0 ]\r\n", outContent.toString());
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\nScore updated [ Mexico 1 - Uruguay 0 ]\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
     }
 
     // As an edge case, if we are trying to update a match that is not being played
@@ -72,7 +75,8 @@ class FCScoreBoardTest {
     void shouldNotUpdateMatchScoresOnBoardWithNotStartedMatch() {
         provideInput("start Mexico Uruguay\nupdate Poland 1 Uruguay 0\nexit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n", outContent.toString());
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Mexico 0 - Uruguay 0 ]\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
         assertEquals("This match is not being played at the moment!\r\n", errContent.toString());
     }
 
@@ -81,7 +85,8 @@ class FCScoreBoardTest {
     void shouldNotUpdateMatchScoresOnBoardWithNegativeNumbers() {
         provideInput("start Turkey Germany\nupdate Turkey 0 Germany -1\nexit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
         assertEquals("Scores can not be negative!\r\n", errContent.toString());
     }
 
@@ -91,6 +96,8 @@ class FCScoreBoardTest {
         provideInput("start Turkey XYZ\nexit");
         scoreBoard.startStreaming();
         assertEquals("Not valid team name [ XYZ ]\r\n", errContent.toString());
+        assertEquals("Live Score Board Up and Running\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
     }
 
     // we could finish a match and remove on the board
@@ -99,7 +106,8 @@ class FCScoreBoardTest {
         provideInput("start Turkey Germany\nupdate Turkey 0 Germany -1\nfinish Turkey\nexit");
         scoreBoard.startStreaming();
         assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n" +
-                "Match finished [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
+                "Match finished [ Turkey 0 - Germany 0 ]\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
     }
 
     // As a similar edge case we need to see error message when we try to finish a match that has been not started yet
@@ -131,7 +139,8 @@ class FCScoreBoardTest {
     void shouldNotStartMatchOnBoardWithTeamThatIsAlreadyStarted() {
         provideInput("start Turkey Germany\nstart Turkey Uruguay\nexit");
         scoreBoard.startStreaming();
-        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n", outContent.toString());
+        assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Germany 0 ]\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
         assertEquals("Can not start again a match with a team that has a match which is being played currently!\r\n", errContent.toString());
     }
 
@@ -144,7 +153,8 @@ class FCScoreBoardTest {
         assertEquals("Live Score Board Up and Running\r\nMatch started [ Turkey 0 - Uruguay 0 ]\r\nMatch started [ Poland 0 - Mexico 0 ]\r\n" +
                 "Score updated [ Poland 1 - Mexico 0 ]\r\nScore updated [ Turkey 1 - Uruguay 0 ]\r\nScore updated [ Turkey 2 - Uruguay 0 ]\r\n" +
                 "Turkey 2 - Uruguay 0\r\n" +
-                "Poland 1 - Mexico 0\r\n", outContent.toString());
+                "Poland 1 - Mexico 0\r\n" +
+                "Application exit! Thanks for watching our board!\r\n", outContent.toString());
     }
 
 }
