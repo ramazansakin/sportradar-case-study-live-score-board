@@ -55,6 +55,11 @@ public class ScoreBoard {
         int homeTeamScore = Integer.parseInt(commandLineParts[2]);
         int awayTeamScore = Integer.parseInt(commandLineParts[4]);
 
+        if (homeTeamScore < 0 || awayTeamScore < 0) {
+            System.err.println("Scores can not be negative!");
+            return;
+        }
+
         try {
             Match theMatchWithTeam = getTheMatchByHomeTeam(home);
             theMatchWithTeam.setHomeTeamScore(homeTeamScore);
